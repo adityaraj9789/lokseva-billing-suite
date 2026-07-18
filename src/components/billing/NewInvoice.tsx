@@ -6,7 +6,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Trash2, Plus, FileDown, Printer, Save } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
+import { Trash2, Plus, FileDown, Printer, Save, Search } from "lucide-react";
 import {
   computeTotals, fmt, loadInvoices, loadProducts, saveInvoices, saveSettings,
   type Invoice, type InvoiceItem, type Product, type ShopSettings,
@@ -32,6 +34,7 @@ export function NewInvoice({
   onSaved: () => void;
 }) {
   const [products] = useState<Product[]>(() => loadProducts());
+  const [pickerOpen, setPickerOpen] = useState<number | null>(null);
   const [inv, setInv] = useState<Invoice>(() => ({
     id: crypto.randomUUID(),
     number: nextInvoiceNumber(settings),
@@ -151,12 +154,44 @@ export function NewInvoice({
                   <div className="flex gap-1">
                     <Input value={it.name} onChange={(e) => setItem(i, { name: e.target.value })} placeholder="Product name" />
                     {products.length > 0 && (
-                      <Select onValueChange={(v) => pickProduct(i, v)}>
-                        <SelectTrigger className="w-10 px-2" aria-label="Pick product"><span className="text-xs">▾</span></SelectTrigger>
-                        <SelectContent>
-                          {products.map((p) => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}
-                        </SelectContent>
-                      </Select>
+                      <Popover open={pickerOpen === i} onOpenChange={(o) => setPickerOpen(o ? i : null)}>
+                        <PopoverTrigger asChild>
+                          <Button variant="outline" size="icon" className="shrink-0" aria-label="Search products">
+                            <Search className="h-4 w-4" />
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="p-0 w-[280px]" align="end">
+                          <Command
+                            filter={(value, search) => {
+                              const p = products.find((x) => x.id === value);
+                              if (!p) return 0;
+                              const hay = `${p.name} ${p.hsn}`.toLowerCase();
+                              return hay.includes(search.toLowerCase()) ? 1 : 0;
+                            }}
+                          >
+                            <CommandInput placeholder="Search product or HSN…" />
+                            <CommandList>
+                              <CommandEmpty>No products found.</CommandEmpty>
+                              <CommandGroup>
+                                {products.map((p) => (
+                                  <CommandItem
+                                    key={p.id}
+                                    value={p.id}
+                                    onSelect={(v) => { pickProduct(i, v); setPickerOpen(null); }}
+                                  >
+                                    <div className="flex flex-col">
+                                      <span className="text-sm">{p.name}</span>
+                                      <span className="text-xs text-muted-foreground">
+                                        HSN {p.hsn} • ₹{p.rate} • {p.gst}% GST
+                                      </span>
+                                    </div>
+                                  </CommandItem>
+                                ))}
+                              </CommandGroup>
+                            </CommandList>
+                          </Command>
+                        </PopoverContent>
+                      </Popover>
                     )}
                   </div>
                 </div>
