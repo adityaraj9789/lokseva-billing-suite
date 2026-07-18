@@ -25,6 +25,14 @@ export interface Product {
   gst: number;
 }
 
+export interface Customer {
+  id: string;
+  name: string;
+  phone: string;
+  address: string;
+  gstin: string;
+}
+
 export interface InvoiceItem {
   productId?: string;
   name: string;
@@ -55,6 +63,7 @@ export interface Invoice {
 const K_SETTINGS = "las_settings_v1";
 const K_PRODUCTS = "las_products_v1";
 const K_INVOICES = "las_invoices_v1";
+const K_CUSTOMERS = "las_customers_v1";
 
 export const defaultSettings: ShopSettings = {
   name: "Lokseva Agro Agency",
@@ -107,6 +116,29 @@ export function loadProducts(): Product[] {
 }
 export function saveProducts(p: Product[]) {
   localStorage.setItem(K_PRODUCTS, JSON.stringify(p));
+}
+
+export function loadCustomers(): Customer[] {
+  if (typeof window === "undefined") return [];
+  return safeParse<Customer[]>(localStorage.getItem(K_CUSTOMERS), []);
+}
+export function saveCustomers(c: Customer[]) {
+  localStorage.setItem(K_CUSTOMERS, JSON.stringify(c));
+}
+export function upsertCustomerFromInvoice(name: string, phone: string, address: string, gstin: string) {
+  if (!name.trim()) return;
+  const list = loadCustomers();
+  const key = (s: string) => s.trim().toLowerCase();
+  const idx = list.findIndex((c) =>
+    (phone && c.phone.trim() === phone.trim()) ||
+    (key(c.name) === key(name) && key(c.phone) === key(phone))
+  );
+  if (idx >= 0) {
+    list[idx] = { ...list[idx], name, phone, address: address || list[idx].address, gstin: gstin || list[idx].gstin };
+  } else {
+    list.unshift({ id: crypto.randomUUID(), name, phone, address, gstin });
+  }
+  saveCustomers(list);
 }
 
 export function loadInvoices(): Invoice[] {
