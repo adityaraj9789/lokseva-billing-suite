@@ -1,7 +1,8 @@
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { computeTotals, numberToWordsINR, type Invoice, type ShopSettings } from "./storage";
-import logoUrl from "@/assets/logo.png";
+import logoAsset from "@/assets/logo.png.asset.json";
+const logoUrl = logoAsset.url;
 
 async function loadLogoDataUrl(): Promise<string | null> {
   try {
