@@ -7,6 +7,7 @@ import { loadSettings, type ShopSettings } from "@/lib/storage";
 import { NewInvoice } from "./billing/NewInvoice";
 import { InvoicesList } from "./billing/InvoicesList";
 import { ProductsManager } from "./billing/ProductsManager";
+import { CustomersManager } from "./billing/CustomersManager";
 import { SettingsForm } from "./billing/SettingsForm";
 import { Toaster } from "@/components/ui/sonner";
 
@@ -42,10 +43,11 @@ export function BillingApp() {
       {header}
       <main className="max-w-6xl mx-auto px-4 py-6">
         <Tabs value={tab} onValueChange={setTab} className="w-full">
-          <TabsList className="grid grid-cols-4 w-full sm:w-auto">
+          <TabsList className="grid grid-cols-5 w-full sm:w-auto">
             <TabsTrigger value="new">New Bill</TabsTrigger>
             <TabsTrigger value="invoices">Invoices</TabsTrigger>
             <TabsTrigger value="products">Products</TabsTrigger>
+            <TabsTrigger value="customers">Customers</TabsTrigger>
             <TabsTrigger value="settings">Settings</TabsTrigger>
           </TabsList>
 
@@ -57,6 +59,9 @@ export function BillingApp() {
           </TabsContent>
           <TabsContent value="products" className="mt-6">
             <Card className="p-4 sm:p-6"><ProductsManager /></Card>
+          </TabsContent>
+          <TabsContent value="customers" className="mt-6">
+            <Card className="p-4 sm:p-6"><CustomersManager /></Card>
           </TabsContent>
           <TabsContent value="settings" className="mt-6">
             <Card className="p-4 sm:p-6"><SettingsForm settings={settings} onSaved={setSettings} /></Card>
