@@ -10,8 +10,9 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Trash2, Plus, FileDown, Printer, Save, Search } from "lucide-react";
 import {
-  computeTotals, fmt, loadInvoices, loadProducts, saveInvoices, saveSettings,
-  type Invoice, type InvoiceItem, type Product, type ShopSettings,
+  computeTotals, fmt, loadInvoices, loadProducts, loadCustomers, saveInvoices, saveSettings,
+  upsertCustomerFromInvoice,
+  type Invoice, type InvoiceItem, type Product, type Customer, type ShopSettings,
 } from "@/lib/storage";
 import { generateInvoicePDF } from "@/lib/pdf";
 import { toast } from "sonner";
@@ -34,7 +35,9 @@ export function NewInvoice({
   onSaved: () => void;
 }) {
   const [products] = useState<Product[]>(() => loadProducts());
+  const [customers, setCustomers] = useState<Customer[]>(() => loadCustomers());
   const [pickerOpen, setPickerOpen] = useState<number | null>(null);
+  const [custOpen, setCustOpen] = useState(false);
   const [inv, setInv] = useState<Invoice>(() => ({
     id: crypto.randomUUID(),
     number: nextInvoiceNumber(settings),
@@ -78,9 +81,22 @@ export function NewInvoice({
     const existing = list.findIndex((x) => x.id === inv.id);
     if (existing >= 0) list[existing] = inv; else list.unshift(inv);
     saveInvoices(list);
+    upsertCustomerFromInvoice(inv.customerName, inv.customerPhone, inv.customerAddress, inv.customerGstin);
+    setCustomers(loadCustomers());
     const nextS = { ...settings, nextInvoiceNo: settings.nextInvoiceNo + 1 };
     saveSettings(nextS);
     onSettingsChange(nextS);
+  };
+
+  const pickCustomer = (c: Customer) => {
+    setInv((p) => ({
+      ...p,
+      customerName: c.name,
+      customerPhone: c.phone,
+      customerAddress: c.address,
+      customerGstin: c.gstin,
+    }));
+    setCustOpen(false);
   };
 
   const handleSave = () => {
@@ -112,7 +128,43 @@ export function NewInvoice({
             </div>
             <div>
               <Label>Customer Name *</Label>
-              <Input value={inv.customerName} onChange={(e) => setInv({ ...inv, customerName: e.target.value })} placeholder="Ramesh Patil" />
+              <div className="flex gap-1">
+                <Input value={inv.customerName} onChange={(e) => setInv({ ...inv, customerName: e.target.value })} placeholder="Ramesh Patil" />
+                <Popover open={custOpen} onOpenChange={setCustOpen}>
+                  <PopoverTrigger asChild>
+                    <Button variant="outline" size="icon" className="shrink-0" aria-label="Search customers">
+                      <Search className="h-4 w-4" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="p-0 w-[280px]" align="end">
+                    <Command
+                      filter={(value, search) => {
+                        const c = customers.find((x) => x.id === value);
+                        if (!c) return 0;
+                        const hay = `${c.name} ${c.phone} ${c.gstin}`.toLowerCase();
+                        return hay.includes(search.toLowerCase()) ? 1 : 0;
+                      }}
+                    >
+                      <CommandInput placeholder="Search name or phone…" />
+                      <CommandList>
+                        <CommandEmpty>No customers saved yet.</CommandEmpty>
+                        <CommandGroup>
+                          {customers.map((c) => (
+                            <CommandItem key={c.id} value={c.id} onSelect={() => pickCustomer(c)}>
+                              <div className="flex flex-col">
+                                <span className="text-sm">{c.name}</span>
+                                <span className="text-xs text-muted-foreground">
+                                  {[c.phone, c.address].filter(Boolean).join(" • ")}
+                                </span>
+                              </div>
+                            </CommandItem>
+                          ))}
+                        </CommandGroup>
+                      </CommandList>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
+              </div>
             </div>
             <div>
               <Label>Phone</Label>
