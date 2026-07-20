@@ -1,19 +1,12 @@
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { computeTotals, numberToWordsINR, type Invoice, type ShopSettings } from "./storage";
-const logoUrl = "/logo.png";
+// Inlined as base64 data URL at build time so the logo always renders on
+// generated PDFs, even fully offline (no network / service-worker fetch).
+import logoDataUrl from "@/assets/logo.png?inline";
 
 async function loadLogoDataUrl(): Promise<string | null> {
-  try {
-    const res = await fetch(logoUrl);
-    const blob = await res.blob();
-    return await new Promise((resolve) => {
-      const r = new FileReader();
-      r.onloadend = () => resolve(r.result as string);
-      r.onerror = () => resolve(null);
-      r.readAsDataURL(blob);
-    });
-  } catch { return null; }
+  return logoDataUrl || null;
 }
 
 const rupee = (n: number) =>
