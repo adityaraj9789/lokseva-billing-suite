@@ -19,6 +19,7 @@ export function SettingsForm({ settings, onSaved }: { settings: ShopSettings; on
       }} />
     </div>
   );
+  void F;
 
   return (
     <div className="space-y-6">
@@ -46,12 +47,12 @@ export function SettingsForm({ settings, onSaved }: { settings: ShopSettings; on
       </div>
 
       <div>
-        <h3 className="font-semibold text-primary mb-3">Payment Details (shown on PDF)</h3>
+        <h3 className="font-semibold text-primary mb-3">Bank Details (shown on PDF)</h3>
         <div className="grid gap-3 sm:grid-cols-2">
-          <F label="Bank Name" k="bankName" />
-          <F label="Account No." k="accountNo" />
-          <F label="IFSC" k="ifsc" />
-          <F label="UPI ID" k="upi" />
+          <div><Label>Bank Name</Label><Input value={s.bankName ?? ""} onChange={(e) => set("bankName", e.target.value)} /></div>
+          <div><Label>Account No.</Label><Input value={s.accountNo ?? ""} onChange={(e) => set("accountNo", e.target.value)} /></div>
+          <div><Label>IFSC</Label><Input value={s.ifsc ?? ""} onChange={(e) => set("ifsc", e.target.value)} /></div>
+          <div><Label>UPI ID</Label><Input value={s.upi ?? ""} onChange={(e) => set("upi", e.target.value)} /></div>
         </div>
       </div>
 
