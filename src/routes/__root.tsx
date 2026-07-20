@@ -89,13 +89,16 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "theme-color", content: "#166534" },
       { name: "apple-mobile-web-app-capable", content: "yes" },
       { name: "apple-mobile-web-app-title", content: "LAA Billing" },
+      { name: "twitter:title", content: "Lokseva Agro Agency — Billing" },
+      { name: "twitter:description", content: "Simple GST billing and invoicing for Lokseva Agro Agency hardware shop." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/2cb57d09-ded5-4f84-9912-c1c4c3f4c8ea/id-preview-496bb42c--fbdd8f84-df24-4a51-94cf-2b2504540897.lovable.app-1784444100702.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/2cb57d09-ded5-4f84-9912-c1c4c3f4c8ea/id-preview-496bb42c--fbdd8f84-df24-4a51-94cf-2b2504540897.lovable.app-1784444100702.png" },
     ],
     links: [
       {
         rel: "stylesheet",
         href: appCss,
       },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
       { rel: "manifest", href: "/manifest.webmanifest" },
       { rel: "apple-touch-icon", href: "/logo.png" },
     ],
