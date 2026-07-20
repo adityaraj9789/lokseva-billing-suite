@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
-const logo = "/logo.png";
+import logo from "@/assets/logo.png";
 import { loadSettings, type ShopSettings } from "@/lib/storage";
 import { NewInvoice } from "./billing/NewInvoice";
 import { InvoicesList } from "./billing/InvoicesList";
