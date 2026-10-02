@@ -63,7 +63,7 @@
 
 :root {
   --radius: 0.625rem;
-  --background: oklch(0.985 0.012 95);
+  --background: oklch(0.99 0.006 95);
   --foreground: oklch(0.24 0.03 150);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.24 0.03 150);
@@ -71,9 +71,9 @@
   --popover-foreground: oklch(0.24 0.03 150);
   --primary: oklch(0.42 0.11 150);
   --primary-foreground: oklch(0.99 0.01 95);
-  --secondary: oklch(0.94 0.03 95);
+  --secondary: oklch(0.96 0.045 95);
   --secondary-foreground: oklch(0.3 0.05 150);
-  --muted: oklch(0.95 0.015 95);
+  --muted: oklch(0.97 0.012 95);
   --muted-foreground: oklch(0.48 0.03 150);
   --accent: oklch(0.78 0.15 75);
   --accent-foreground: oklch(0.22 0.05 60);
@@ -140,5 +140,14 @@
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
+    min-width: 320px;
+  }
+}
+
+@media (max-width: 639px) {
+  input,
+  textarea,
+  button[role="combobox"] {
+    font-size: 16px;
   }
 }

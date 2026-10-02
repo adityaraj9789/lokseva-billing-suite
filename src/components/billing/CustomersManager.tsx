@@ -50,14 +50,28 @@ export function CustomersManager() {
       </div>
 
       <div>
-        <div className="flex items-center justify-between mb-3 gap-3">
+        <div className="mb-3 grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center">
           <h3 className="font-semibold text-primary">Customers ({filtered.length})</h3>
-          <div className="relative w-full max-w-xs">
+          <div className="relative w-full sm:max-w-xs">
             <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input className="pl-8" placeholder="Search name, phone, GSTIN…" value={query} onChange={(e) => setQuery(e.target.value)} />
           </div>
         </div>
-        <div className="overflow-x-auto">
+        <div className="grid gap-3 sm:hidden">
+          {filtered.map((c) => (
+            <div key={c.id} className="space-y-3 rounded-md border border-border bg-background p-3 shadow-sm">
+              <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2">
+                <div className="min-w-0"><Label>Name</Label><Input value={c.name} onChange={(e) => update(c.id, { name: e.target.value })} /></div>
+                <Button variant="ghost" size="icon" onClick={() => remove(c.id)} aria-label="Delete customer" className="mt-5 h-11 w-11"><Trash2 className="h-4 w-4 text-destructive" /></Button>
+              </div>
+              <div><Label>Phone</Label><Input value={c.phone} onChange={(e) => update(c.id, { phone: e.target.value })} inputMode="tel" /></div>
+              <div><Label>Address</Label><Input value={c.address} onChange={(e) => update(c.id, { address: e.target.value })} /></div>
+              <div><Label>GSTIN</Label><Input value={c.gstin} onChange={(e) => update(c.id, { gstin: e.target.value })} /></div>
+            </div>
+          ))}
+          {filtered.length === 0 && <p className="py-6 text-center text-sm text-muted-foreground">No customers found.</p>}
+        </div>
+        <div className="hidden overflow-x-auto sm:block">
           <table className="w-full text-sm">
             <thead className="bg-secondary text-secondary-foreground">
               <tr>
