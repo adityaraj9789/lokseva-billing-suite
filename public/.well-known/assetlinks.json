@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "app.lovable.loksevabillbuddy",
+        "sha256_cert_fingerprints": ["D5:84:0D:24:21:53:3B:AC:5D:34:9A:D4:41:9D:0D:64:12:8B:6C:CD:9C:FF:AF:D4:1A:8E:6C:7B:C5:AB:D5:DD"]
+      }
+    }]
