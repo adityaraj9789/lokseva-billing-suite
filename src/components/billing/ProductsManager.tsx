@@ -43,7 +43,23 @@ export function ProductsManager() {
 
       <div>
         <h3 className="font-semibold text-primary mb-3">Products ({products.length})</h3>
-        <div className="overflow-x-auto">
+        <div className="grid gap-3 sm:hidden">
+          {products.map((p) => (
+            <div key={p.id} className="space-y-3 rounded-md border border-border bg-background p-3 shadow-sm">
+              <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2">
+                <div className="min-w-0"><Label>Name</Label><Input value={p.name} onChange={(e) => update(p.id, { name: e.target.value })} /></div>
+                <Button variant="ghost" size="icon" onClick={() => remove(p.id)} aria-label="Delete product" className="mt-5 h-11 w-11"><Trash2 className="h-4 w-4 text-destructive" /></Button>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div><Label>HSN</Label><Input value={p.hsn} onChange={(e) => update(p.id, { hsn: e.target.value })} /></div>
+                <div><Label>Unit</Label><Input value={p.unit} onChange={(e) => update(p.id, { unit: e.target.value })} /></div>
+                <div><Label>Rate</Label><Input type="number" step="0.01" value={p.rate} onChange={(e) => update(p.id, { rate: parseFloat(e.target.value) || 0 })} inputMode="decimal" /></div>
+                <div><Label>GST %</Label><Input type="number" step="0.01" value={p.gst} onChange={(e) => update(p.id, { gst: parseFloat(e.target.value) || 0 })} inputMode="decimal" /></div>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="hidden overflow-x-auto sm:block">
           <table className="w-full text-sm">
             <thead className="bg-secondary text-secondary-foreground">
               <tr>

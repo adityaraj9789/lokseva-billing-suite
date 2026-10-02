@@ -116,7 +116,7 @@ export function NewInvoice({
   return (
     <div className="grid gap-4 lg:grid-cols-3">
       <div className="lg:col-span-2 space-y-4">
-        <Card className="p-4 sm:p-6">
+        <Card className="p-4 shadow-sm sm:p-6">
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
               <Label>Invoice No.</Label>
@@ -192,7 +192,7 @@ export function NewInvoice({
           </div>
         </Card>
 
-        <Card className="p-4 sm:p-6">
+        <Card className="p-4 shadow-sm sm:p-6">
           <div className="flex items-center justify-between mb-3">
             <h3 className="font-semibold text-primary">Items</h3>
             <Button size="sm" variant="secondary" onClick={addItem}><Plus className="h-4 w-4 mr-1" />Add Row</Button>
@@ -200,7 +200,7 @@ export function NewInvoice({
 
           <div className="space-y-3">
             {inv.items.map((it, i) => (
-              <div key={i} className="grid gap-2 sm:grid-cols-12 items-end border-b border-border/50 pb-3 last:border-0">
+              <div key={i} className="grid grid-cols-2 gap-3 rounded-md border border-border bg-background p-3 shadow-sm sm:grid-cols-12 sm:items-end sm:rounded-none sm:border-x-0 sm:border-t-0 sm:bg-transparent sm:p-0 sm:pb-3 sm:shadow-none">
                 <div className="sm:col-span-4">
                   <Label className="text-xs">Item</Label>
                   <div className="flex gap-1">
@@ -212,7 +212,7 @@ export function NewInvoice({
                             <Search className="h-4 w-4" />
                           </Button>
                         </PopoverTrigger>
-                        <PopoverContent className="p-0 w-[280px]" align="end">
+                        <PopoverContent className="w-[min(22rem,calc(100vw-2rem))] p-0" align="end">
                           <Command
                             filter={(value, search) => {
                               const p = products.find((x) => x.id === value);
@@ -271,8 +271,8 @@ export function NewInvoice({
                   <Label className="text-xs">GST %</Label>
                   <Input type="number" min={0} step="0.01" value={it.gst} onChange={(e) => setItem(i, { gst: parseFloat(e.target.value) || 0 })} />
                 </div>
-                <div className="sm:col-span-1 flex justify-end">
-                  <Button variant="ghost" size="icon" onClick={() => removeItem(i)} aria-label="Remove item">
+                <div className="col-span-2 flex justify-end sm:col-span-1">
+                  <Button variant="ghost" size="icon" onClick={() => removeItem(i)} aria-label="Remove item" className="h-11 w-11 sm:h-9 sm:w-9">
                     <Trash2 className="h-4 w-4 text-destructive" />
                   </Button>
                 </div>
@@ -281,14 +281,14 @@ export function NewInvoice({
           </div>
         </Card>
 
-        <Card className="p-4 sm:p-6">
+        <Card className="p-4 shadow-sm sm:p-6">
           <Label>Notes</Label>
           <Textarea value={inv.notes} onChange={(e) => setInv({ ...inv, notes: e.target.value })} placeholder="Terms, warranty info, thanks…" rows={3} />
         </Card>
       </div>
 
       <div className="space-y-4">
-        <Card className="p-4 sm:p-6 sticky top-4">
+        <Card className="p-4 shadow-sm sm:p-6 lg:sticky lg:top-4">
           <h3 className="font-semibold text-primary mb-3">Summary</h3>
           <div className="space-y-2 text-sm">
             <Row label="Taxable" value={fmt(totals.taxable)} />
